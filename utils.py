@@ -1,14 +1,21 @@
+# packages
 import csv
 import ast
 import copy
 import pandas as pd
 import matplotlib.pyplot as plt
+import requests
 from decimal import Decimal
 from scipy.stats import spearmanr
-
 from bokeh.plotting import figure, output_file, show
 from bokeh.models import HoverTool
+from rdkit import Chem
+from rdkit.Chem import Draw
+from IPython.display import display
+from PIL import Image
 
+
+# functions
 def csv2dict(csv_file_path):
     result_dict = {}
     with open(csv_file_path, 'r') as csv_file:
@@ -68,7 +75,42 @@ def histogram(dict1, val_type = 'MEAN', bins = 10, x_axis = 'x-axis', y_axis ='c
     plt.ylabel(y_axis)
     plt.show()
 
+def get_kegg_compound_smiles(kegg_id):
+    url = f'http://rest.kegg.jp/get/{kegg_id}/mol'
+    response = requests.get(url)
+    if response.status_code == 200:
+        mol_data = response.text
+        mol = Chem.MolFromMolBlock(mol_data)
+        return mol
+    else:
+        raise ValueError(f"Error fetching data for {kegg_id}: {cpd2name.get(kegg_id, '')}")
 
+def draw_multiple_molecules(molecules, mol_labels=None):
+    img = Draw.MolsToGridImage(molecules, molsPerRow=10, subImgSize=(400, 400), legends=mol_labels, maxMols=200)
+    display(img)
+
+    with open('cpds.png', mode='wb') as f:
+        f.write(img.data)
+        
+def drawMols(molecule_kegg_ids):
+    molecules = []
+    labels = []
+
+    # from SMILES
+    for kegg_id in molecule_kegg_ids:
+        try:
+            mol_kegg = get_kegg_compound_smiles(kegg_id)
+            if mol_kegg:
+                molecules.append(mol_kegg)
+                labels.append(cpd2name[kegg_id])
+        except ValueError as e:
+            print(e)
+            
+    if molecules:
+        draw_multiple_molecules(molecules, labels)
+
+
+# dictionaries
 cpd2name = csv2dict('../data/assets/cpd2nameShort.csv')
 cpd2nameLong = csv2dict('../data/assets/cpd2name.csv')
 
