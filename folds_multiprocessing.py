@@ -1,3 +1,4 @@
+import os
 import warnings
 warnings.filterwarnings("ignore")
 import networkExpansionPy.folds as nf
@@ -7,8 +8,9 @@ import concurrent.futures
 from multiprocessing import Manager
 import random
 
-NUM_CORES = 4  # number of cores to use for multiprocessing
-PRE_EXP = "NONE"  # pre-expansion type
+NUM_RUNS = 1000  # number of simulations to run before stopping
+NUM_CORES = 8  # number of cores to use for multiprocessing
+PRE_EXP = "C00004"  # pre-expansion type
 # ["NONE", "C00002", "C00004", "C00010", "C00016", "C00019", "Z00009", "Z00035", "Z00047", "ALL"]
 
 
@@ -68,6 +70,7 @@ if __name__ == '__main__':
     condition = ((metabolism.network['rn'].isin(H2O2_rns)) & (metabolism.network['direction'] == 'reverse'))
     metabolism.network = metabolism.network[~condition]
     assert 'R00017_v1' not in list(metabolism.network['rn'])
+    print(len(list(metabolism.network['rn'])))
 
     ## FoldRules
     rn2rules = pd.read_pickle(RN2RULES_PATH)
@@ -118,7 +121,7 @@ if __name__ == '__main__':
     # change the last parameter for the number of runs to perform
     with concurrent.futures.ProcessPoolExecutor(max_workers=NUM_CORES) as executor:
         futures = [executor.submit(fold_gated_expansion, fm, ALGORITHM, WRITE, WRITE_TMP, CUSTOM_WRITE_PATH,
-                                   ORDERED_OUTCOME, IGNORE_REACTION_VERSIONS, run_counter, lock, 3)
+                                   ORDERED_OUTCOME, IGNORE_REACTION_VERSIONS, run_counter, lock, NUM_RUNS)
                    for _ in range(NUM_CORES)]
 
         for future in concurrent.futures.as_completed(futures):
