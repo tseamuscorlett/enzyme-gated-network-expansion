@@ -3,6 +3,7 @@ setup.py
 networkExpansionPy/__init__.py
 networkExpansionPy/folds.py
 networkExpansionPy/foldsOld.py
+networkExpansionPy/folds_inconsistent.py
 networkExpansionPy/kegg.py
 networkExpansionPy/lib.py
 networkExpansionPy/thermo.py
