@@ -156,7 +156,7 @@ def drawMols(molecule_kegg_ids):
 def rnWith(xgroup, rn2rules, rn2cpds):
     rnWithX = []
     for reaction, rules in rn2rules.items():
-        if reaction in rn2cpds:  # only get rns that show up in SI (12872 -> 8558)
+        if reaction in rn2cpds:  # only get rns that show up in SI
             for rule in rules:
                 if xgroup in rule:
                     rnWithX.append(reaction)
