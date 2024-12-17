@@ -82,19 +82,22 @@ def scatter(dict1, dict2, x_axis = 'x-axis', y_axis = 'y-axis'):
     plt.ylabel(y_axis)
     plt.show()
 
-def histogram(dict1, val_type = 'MEAN', bins = 10, x_axis = 'x-axis', y_axis ='counts', ylog=False):
+def histogram(dict1, val_type = 'MEAN', bins = 10, x_axis = 'x-axis', y_axis ='counts', ylog=False, xlog=False):
     data1 = list(dict1.values())
     
     if type(data1[0]) == dict:
         data1 = [x[val_type] for x in data1]
     
-    plt.hist(data1, bins=bins, edgecolor='k')
+    plt.hist(data1, bins=bins, edgecolor=None)
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
 
     if ylog:
         plt.yscale('log', nonpositive='clip')
+    if xlog:
+        plt.xscale('log', nonpositive='clip')
     
+    # plt.savefig(f'hist_{x_axis}.svg', dpi=300, bbox_inches='tight')
     plt.show()
 
 def loglog(dict1, dict2, x_axis = 'x-axis', y_axis = 'y-axis'):
