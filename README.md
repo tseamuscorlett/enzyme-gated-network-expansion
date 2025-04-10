@@ -6,6 +6,8 @@ Simulations were run using 'folds_multiprocessing.py' and 'RUN_foldgated.ipynb'
 
 Analysis files (.ipynb) include dependencies on assets from 'data' directory which can be downloaded at XYZ.
 
+Phyletic distribution of ECOD X-groups calculated using code here: https://github.com/tseamuscorlett/ECOD_domain_phyletic_distribution
+
 Enzyme-gated network expansion was run using the python package below.
 
 
