@@ -1,4 +1,5 @@
 # packages
+import os
 import csv
 import ast
 import copy
@@ -8,25 +9,45 @@ import collections
 import glob
 import json
 import random
+import re
+import math
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from decimal import Decimal
+from itertools import combinations
+from itertools import product
+from itertools import islice
+
 from scipy.stats import spearmanr
 from scipy.stats import pearsonr
 from scipy.stats import rankdata
 from scipy.stats import mannwhitneyu
 from scipy.stats import chi2_contingency
+
 from bokeh.plotting import figure, output_file, show
 from bokeh.models import HoverTool
+from bokeh.models import BoxAnnotation, ColumnDataSource
+
+from decimal import Decimal
 from rdkit import Chem
 from rdkit.Chem import Draw
 from IPython.display import display
 from PIL import Image
 from collections import Counter
+from collections import OrderedDict
+import networkx as nx
+
+from matplotlib.colors import to_hex
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+from matplotlib_venn import venn3
+import matplotlib.gridspec as gridspec
+from matplotlib.lines import Line2D
+import matplotlib.ticker as ticker
+import matplotlib.patches as mpatches
 
 
 # functions
@@ -73,16 +94,20 @@ def pearson(dict1, dict2):
     formatted_p_value = '{:e}'.format(p_value)
     return correlation, formatted_p_value
 
-def scatter(dict1, dict2, x_axis = 'x-axis', y_axis = 'y-axis'):
+def scatter(dict1, dict2, x_axis = 'x-axis', y_axis = 'y-axis', savefig=False):
     fig, ax = plt.subplots()
     
     valid_keys, data1, data2 = todata(dict1, dict2)
     plt.scatter(data1, data2, marker='o', color='b', alpha = 0.1, label='Data Points', zorder=2)
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
+
+    if savefig:
+        plt.savefig(f'scatter_{x_axis}_{y_axis}.svg', dpi=300, bbox_inches='tight')
+    
     plt.show()
 
-def histogram(dict1, val_type = 'MEAN', bins = 10, x_axis = 'x-axis', y_axis ='counts', ylog=False, xlog=False):
+def histogram(dict1, val_type = 'MEAN', bins = 10, x_axis = 'x-axis', y_axis ='counts', ylog=False, xlog=False, savefig=False):
     data1 = list(dict1.values())
     
     if type(data1[0]) == dict:
@@ -97,7 +122,9 @@ def histogram(dict1, val_type = 'MEAN', bins = 10, x_axis = 'x-axis', y_axis ='c
     if xlog:
         plt.xscale('log', nonpositive='clip')
     
-    # plt.savefig(f'hist_{x_axis}.svg', dpi=300, bbox_inches='tight')
+    if savefig:
+        plt.savefig(f'histo_{x_axis}.svg', dpi=300, bbox_inches='tight')
+    
     plt.show()
 
 def loglog(dict1, dict2, x_axis = 'x-axis', y_axis = 'y-axis'):
