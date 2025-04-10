@@ -8,7 +8,7 @@ Analysis files (.ipynb) include dependencies on assets from 'data' directory whi
 
 Phyletic distribution of ECOD X-groups calculated using code here: https://github.com/tseamuscorlett/ECOD_domain_phyletic_distribution
 
-Enzyme-gated network expansion was run using the python package below.
+Enzyme-gated network expansion was run using the python package (https://github.com/jgoldford/networkExpansionPy) described below.
 
 
 # networkExpansionPy
