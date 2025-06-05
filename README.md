@@ -2,7 +2,7 @@
 
 Jupyter notebooks for running and analyzing data from enzyme-gated network expansion.
 
-Simulations were run using 'folds_multiprocessing.py' and 'RUN_foldgated.ipynb'
+Simulations were run using 'folds_multiprocessing.py' and 'RUN_model.ipynb'
 
 Analysis files (.ipynb) include dependencies on assets from 'data' directory which can be downloaded at XYZ.
 
